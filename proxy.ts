@@ -19,16 +19,25 @@ export function proxy(req: NextRequest) {
 
   let subdomain = "";
 
-  // ✅ Localhost (vd: vng.localhost:3000)
+  // 🧩 Localhost mode: vng.localhost:3000
   if (hostname.endsWith(".localhost")) {
     subdomain = hostname.replace(".localhost", "");
   }
 
-  // ✅ Vercel (vd: vng.demo-multi-tenant-website.vercel.app)
+  // 🧩 Vercel deploy mode:
+  // demo-multi-tenant-website.vercel.app  → subdomain = ""
+  // vng-demo-multi-tenant-website.vercel.app → subdomain = "vng"
   else if (hostname.endsWith(".vercel.app")) {
-    subdomain = hostname.replace(".demo-multi-tenant-website.vercel.app", "");
+    // Lấy phần đầu trước tên chính của project
+    // vd: vng-demo-multi-tenant-website.vercel.app → vng
+    const parts = hostname.split(".vercel.app")[0].split("-");
+    const maybeTenant = parts[0];
+    if (maybeTenant && maybeTenant !== "demo") {
+      subdomain = maybeTenant; // vng, zalo, tiki, ...
+    }
   }
 
+  // 🔀 Rewrite sang route tương ứng
   if (subdomain && subdomain !== "www" && subdomain !== "localhost") {
     url.pathname = `/tenant/${subdomain}${url.pathname}`;
     return NextResponse.rewrite(url);

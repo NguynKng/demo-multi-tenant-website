@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Metadata } from "next";
+import Config from "@/envVars";
 
 const COMPANY_DATA: Record<string, any> = {
   vng: {
@@ -45,29 +46,13 @@ const COMPANY_DATA: Record<string, any> = {
     ],
     email: "info@viettel.com.vn",
   },
-  vingroup: {
-    fullName: "Tập đoàn Vingroup",
-    bio: "Tập đoàn đa ngành lớn nhất Việt Nam, với các lĩnh vực: bất động sản, công nghiệp, công nghệ và dịch vụ.",
-    website: "https://vingroup.net",
-    avatar: "/logos/vingroup-logo.png",
-    coverPhoto: "/covers/vingroup-cover.webp",
-    skills: ["Bất động sản", "Công nghiệp", "Công nghệ", "Ô tô điện"],
-    interests: ["Phát triển bền vững", "Đổi mới sáng tạo", "Toàn cầu hóa"],
-    socialLinks: [
-      { platform: "Facebook", url: "https://www.facebook.com/Vingroupofficial" },
-      { platform: "LinkedIn", url: "https://www.linkedin.com/company/vingroup/" },
-    ],
-    email: "contact@vingroup.net",
-  },
 };
 
-interface Props {
-  params: Promise<{ subdomain: string }>;
-}
+export async function generateMetadata(): Promise<Metadata> {
+  const tenant = Config.TENANT; // 👈 Lấy từ môi trường
+  const company = tenant ? COMPANY_DATA[tenant] : null;
+  console.log("Generating metadata for tenant:", tenant);
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { subdomain } = await params;
-  const company = COMPANY_DATA[subdomain];
   if (!company) {
     return {
       title: "Not Found | Landing Page",
@@ -79,13 +64,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${company.fullName} | Landing Page`,
     description: company.bio,
     icons: {
-        icon: [{ url: '/logos/vng-logo.png', type: "image/png" }],
+      icon: [{ url: company.avatar, type: "image/png" }], // 👈 icon theo từng tenant
     },
     openGraph: {
       title: company.fullName,
       description: company.bio,
       images: [company.coverPhoto],
-      url: `https://${subdomain}.landingpage.com`,
+      url: `https://${tenant}.landingpage.com`,
       siteName: "LandingPage.com",
     },
     twitter: {
@@ -97,9 +82,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function TenantLandingPage({ params }: Props) {
-  const { subdomain } = await params;
-  const company = COMPANY_DATA[subdomain];
+export default async function TenantLandingPage() {
+  const tenant = Config.TENANT; // 👈 Lấy từ biến môi trường
+  const company = tenant ? COMPANY_DATA[tenant] : null;
 
   if (!company) return notFound();
 

@@ -27,8 +27,6 @@ const companies = [
   },
 ];
 
-
-
 export default function Home() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black py-16 px-6 flex flex-col items-center">
