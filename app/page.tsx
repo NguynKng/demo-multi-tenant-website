@@ -38,7 +38,7 @@ export default function Home() {
         {companies.map((c) => (
           <a
             key={c.subdomain}
-            href={`http://${c.subdomain}.localhost:3000`}
+            href={`http://${c.subdomain}-demo-multi-tenant-website.vercel.app`}
             className="group border border-gray-200 dark:border-gray-800 rounded-2xl p-6 flex flex-col items-center hover:shadow-lg transition"
           >
             <div className="relative w-24 h-24 mb-4">
