@@ -5,9 +5,9 @@ import type { NextRequest } from "next/server";
 export function proxy(req: NextRequest) {
   const url = req.nextUrl.clone();
   const host = req.headers.get("host") || "";
-  const hostname = host.split(":")[0]; // bỏ port khi local
+  const hostname = host.split(":")[0];
 
-  // Bỏ qua các request nội bộ
+  // Bỏ qua file tĩnh & API
   if (
     url.pathname.startsWith("/_next") ||
     url.pathname.startsWith("/api") ||
@@ -17,22 +17,16 @@ export function proxy(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Lấy subdomain cho local & vercel
   let subdomain = "";
 
-  // 🔹 Local: aa.localhost
+  // ✅ Localhost (vd: vng.localhost:3000)
   if (hostname.endsWith(".localhost")) {
     subdomain = hostname.replace(".localhost", "");
   }
 
-  // 🔹 Vercel: aa.vercel.app
+  // ✅ Vercel (vd: vng.demo-multi-tenant-website.vercel.app)
   else if (hostname.endsWith(".vercel.app")) {
-    subdomain = hostname.replace(".vercel.app", "");
-  }
-
-  // 🔹 Custom domain (nếu có): aa.mydomain.com
-  else if (hostname.endsWith(".mydomain.com")) {
-    subdomain = hostname.replace(".mydomain.com", "");
+    subdomain = hostname.replace(".demo-multi-tenant-website.vercel.app", "");
   }
 
   if (subdomain && subdomain !== "www" && subdomain !== "localhost") {
@@ -44,8 +38,5 @@ export function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    // Áp dụng cho tất cả route trừ static và API
-    "/((?!_next|api|favicon.ico|logos).*)",
-  ],
-}
+  matcher: ["/((?!_next|api|favicon.ico|logos).*)"],
+};
