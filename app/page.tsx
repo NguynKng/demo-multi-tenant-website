@@ -1,33 +1,25 @@
 import Image from "next/image";
+import { Company } from "@/types/Company";
+import Config from "@/envVars";
+import { getBackendImgUrl } from "@/utils/helper";
 
-const companies = [
-  {
-    name: "VNG Corporation",
-    subdomain: "vng",
-    logo: "/logos/vng-logo.png",
-    description: "Công ty công nghệ hàng đầu Việt Nam.",
-  },
-  {
-    name: "Zalo",
-    subdomain: "zalo",
-    logo: "/logos/zalo-logo.png",
-    description: "Ứng dụng nhắn tin phổ biến nhất tại Việt Nam.",
-  },
-  {
-    name: "Viettel",
-    subdomain: "viettel",
-    logo: "/logos/viettel-logo.jpg",
-    description: "Nhà mạng viễn thông lớn nhất Việt Nam.",
-  },
-  {
-    name: "Vingroup",
-    subdomain: "vingroup",
-    logo: "/logos/vingroup-logo.png",
-    description: "Tập đoàn đa ngành lớn nhất Việt Nam.",
-  },
-];
+// ✅ Hàm fetch company từ API route nội bộ
+async function fetchAllCompanies(): Promise<Company[]> {
+  try {
+    const res = await fetch(`${Config.NEXT_PUBLIC_BASE_URL}/api/company`, {
+      next: { revalidate: 60 }, // cache nhẹ
+    });
 
-export default function Home() {
+    const data = await res.json();
+    if (data.success && data.data) return data.data;
+  } catch (err) {
+    console.error("Error fetching companies:", err);
+  }
+  return [];
+}
+
+export default async function Home() {
+  const companies = await fetchAllCompanies();
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black py-16 px-6 flex flex-col items-center">
       <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-10">
@@ -37,23 +29,22 @@ export default function Home() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {companies.map((c) => (
           <a
-            key={c.subdomain}
-            href={`http://${c.subdomain}-demo-multi-tenant-website.vercel.app`}
+            key={c.slug}
+            href={`http://${c.slug}-demo-multi-tenant-website.vercel.app`}
             className="group border border-gray-200 dark:border-gray-800 rounded-2xl p-6 flex flex-col items-center hover:shadow-lg transition"
           >
             <div className="relative w-24 h-24 mb-4">
-              <Image
-                src={c.logo}
+              <img
+                src={getBackendImgUrl(c.avatar)}
                 alt={c.name}
-                fill
-                className="object-contain rounded-xl"
+                className="size-full object-contain rounded-xl"
               />
             </div>
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
               {c.name}
             </h2>
             <p className="text-gray-600 dark:text-gray-400 text-center text-sm">
-              {c.description}
+              {c.bio}
             </p>
           </a>
         ))}
