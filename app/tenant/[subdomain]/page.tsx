@@ -4,7 +4,6 @@ import { Metadata } from "next";
 import Config from "@/envVars";
 import { Company } from "@/types/Company";
 import { getBackendImgUrl } from "@/utils/helper";
-import { get } from "http";
 
 interface Props {
   params: Promise<{ subdomain: string }>;
@@ -66,6 +65,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function TenantLandingPage({ params }: Props) {
   const { subdomain } = await params;
   const company = await fetchCompanyByTenant(subdomain);
+  console.log("Company Data:", company);
 
   if (!company) return notFound();
 
@@ -74,9 +74,10 @@ export default async function TenantLandingPage({ params }: Props) {
       {/* Cover Section */}
       <section className="relative text-white py-24 px-4 text-center overflow-hidden">
         <div className="absolute inset-0 z-40">
-          <img
-            src={getBackendImgUrl(company.coverPhoto)}
+          <Image
+            src={company.coverPhoto}
             alt={company.name}
+            fill
             className="size-full object-cover"
           />
           <div className="absolute inset-0 bg-black/40" />
@@ -84,9 +85,10 @@ export default async function TenantLandingPage({ params }: Props) {
 
         <div className="max-w-3xl mx-auto relative z-50">
           <div className="relative w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-white mb-6 bg-white">
-            <img
-              src={getBackendImgUrl(company.avatar)}
+            <Image
+              src={company.avatar}
               alt={company.name}
+              fill
               className="size-full object-contain p-2"
             />
           </div>
