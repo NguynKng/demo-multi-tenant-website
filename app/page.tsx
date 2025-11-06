@@ -34,9 +34,10 @@ export default async function Home() {
             className="group border border-gray-200 dark:border-gray-800 rounded-2xl p-6 flex flex-col items-center hover:shadow-lg transition"
           >
             <div className="relative w-24 h-24 mb-4">
-              <img
-                src={getBackendImgUrl(c.avatar)}
+              <Image
+                src={c.avatar}
                 alt={c.name}
+                fill
                 className="size-full object-contain rounded-xl"
               />
             </div>
