@@ -23,14 +23,14 @@ export const metadata: Metadata = {
     url: "https://demo-multi-tenant-website.vercel.app",
     type: "website",
     siteName: "MultiTenantDemo",
-    images: ["/logos/zalo-logo.png"],
+    images: ["/logos/ronaldo.jfif"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Demo Multi-Tenant Website",
     description:
       "A demo website showcasing multi-tenant architecture with Next.js",
-    images: ["/logos/zalo-logo.png"],
+    images: ["/logos/ronaldo.jfif"],
   },
 };
 
