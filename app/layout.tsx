@@ -15,9 +15,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Demo Multi-Tenant Website",
   description: "A demo website showcasing multi-tenant architecture with Next.js",
-  icons: {
-    icon: [{ url: "/favicon.ico", type: "image/x-icon" }],
-  },
 };
 
 export default function RootLayout({

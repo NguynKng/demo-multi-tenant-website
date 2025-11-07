@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { Company } from "@/types/Company";
 import Config from "@/envVars";
-import { getBackendImgUrl } from "@/utils/helper";
 
 // ✅ Hàm fetch company từ API route nội bộ
 async function fetchAllCompanies(): Promise<Company[]> {

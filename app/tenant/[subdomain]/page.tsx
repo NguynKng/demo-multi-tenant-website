@@ -3,7 +3,6 @@ import Image from "next/image";
 import { Metadata } from "next";
 import Config from "@/envVars";
 import { Company } from "@/types/Company";
-import { getBackendImgUrl } from "@/utils/helper";
 
 interface Props {
   params: Promise<{ subdomain: string }>;
@@ -34,21 +33,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { subdomain } = await params;
   const company = await fetchCompanyByTenant(subdomain);
 
+  const baseURL: string = String(Config.NEXT_PUBLIC_BASE_URL);
+
   if (!company) {
     return {
+      metadataBase: new URL(baseURL),
       title: "Not Found | Landing Page",
       description: "Công ty không tồn tại.",
     };
   }
 
   return {
+    metadataBase: new URL(baseURL),
     title: `${company.name} | Landing Page`,
     description: company.bio,
-    icons: { icon: [{ url: getBackendImgUrl(company.avatar), type: "image/png" }] },
+    icons: { icon: [{ url: company.avatar, type: "image/png" }] },
     openGraph: {
       title: company.name,
       description: company.bio,
-      images: [getBackendImgUrl(company.coverPhoto)],
+      images: [`${Config.NEXT_PUBLIC_BASE_URL}${company.coverPhoto}`],
       url: `${Config.NEXT_PUBLIC_BASE_URL}`,
       siteName: "LandingPage.com",
     },
@@ -56,7 +59,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: company.name,
       description: company.bio,
-      images: [company.coverPhoto],
+      images: [`${Config.NEXT_PUBLIC_BASE_URL}${company.coverPhoto}`],
     },
   };
 }
@@ -65,7 +68,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function TenantLandingPage({ params }: Props) {
   const { subdomain } = await params;
   const company = await fetchCompanyByTenant(subdomain);
-  console.log("Company Data:", company);
+  //console.log("Company Data:", company);
 
   if (!company) return notFound();
 
@@ -78,6 +81,8 @@ export default async function TenantLandingPage({ params }: Props) {
             src={company.coverPhoto}
             alt={company.name}
             fill
+            loading="eager"
+            sizes="full"
             className="size-full object-cover"
           />
           <div className="absolute inset-0 bg-black/40" />
@@ -89,6 +94,8 @@ export default async function TenantLandingPage({ params }: Props) {
               src={company.avatar}
               alt={company.name}
               fill
+              loading="eager"
+              sizes="full"
               className="size-full object-contain p-2"
             />
           </div>
