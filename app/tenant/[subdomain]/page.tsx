@@ -34,6 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const company = await fetchCompanyByTenant(subdomain);
 
   const baseURL: string = String(Config.NEXT_PUBLIC_BASE_URL);
+  
 
   if (!company) {
     return {
@@ -51,7 +52,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: company.name,
       description: company.bio,
-      images: [`${Config.NEXT_PUBLIC_BASE_URL}${company.coverPhoto}`],
+      images: [{
+        url: `${Config.NEXT_PUBLIC_BASE_URL}${company.coverPhoto}`,
+        width: 1200,
+        height: 630,
+        alt: company.name,
+      }],
       url: `${Config.NEXT_PUBLIC_BASE_URL}`,
       siteName: "LandingPage.com",
     },
