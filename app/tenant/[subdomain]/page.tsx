@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: company.name,
       description: company.bio,
       images: [{
-        url: `${Config.NEXT_PUBLIC_BASE_URL}${company.coverPhoto}`,
+        url: `${Config.NEXT_PUBLIC_BASE_URL}${company.avatar}`,
         width: 1200,
         height: 630,
         alt: company.name,
@@ -65,7 +65,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       title: company.name,
       description: company.bio,
-      images: [`${Config.NEXT_PUBLIC_BASE_URL}${company.coverPhoto}`],
+      images: [`${Config.NEXT_PUBLIC_BASE_URL}${company.avatar}`],
     },
   };
 }
