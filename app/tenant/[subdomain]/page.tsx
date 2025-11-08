@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Metadata } from "next";
 import Config from "@/envVars";
 import { Company } from "@/types/Company";
+import { buildCompanyMetadata } from "@/app/lib/generateMetadata";
 
 interface Props {
   params: Promise<{ subdomain: string }>;
@@ -43,40 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  return {
-    metadataBase: new URL(baseURL),
-    title: `${company.name} | Landing Page`,
-    description: company.bio,
-    icons: { icon: [{ url: company.avatar, type: "image/png" }] },
-    openGraph: {
-      title: company.name,
-      description: company.bio,
-      type: "website",
-      images: [
-        {
-          url: company.avatar,
-          width: 1200,
-          height: 630,
-          alt: company.name,
-        },
-      ],
-      url: `${Config.NEXT_PUBLIC_BASE_URL}`,
-      siteName: "LandingPage.com",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: company.name,
-      description: company.bio,
-      images: [
-        {
-          url: company.avatar,
-          width: 1200,
-          height: 630,
-          alt: company.name,
-        },
-      ],
-    },
-  };
+  return buildCompanyMetadata(company);
 }
 
 // ✅ SSR Page
