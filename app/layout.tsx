@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   title: "Demo Multi-Tenant Website",
   description:
     "A demo website showcasing multi-tenant architecture with Next.js",
+    icons: {
+      icon: [{ url: "images/favicon.ico" }],
+    },
   openGraph: {
     title: "Demo Multi-Tenant Website",
     description:
